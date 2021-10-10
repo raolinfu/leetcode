@@ -1,4 +1,6 @@
 #include<iostream>
+#include<algorithm>
+
 int rangeBitwiseAnd(int left, int right) {
 	int n = 1 << 30;
 	int res = 0;
