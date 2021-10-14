@@ -21,6 +21,22 @@ int rob(vector<int>& nums) {
 	delete[] dp;
 	return res;
 }
+int rob1(vector<int>& nums) {
+	// f(n) = max(nums[n] + f(n - 2), f(n - 1))	
+	int first = nums[0];
+	if(nums.size() < 2)
+		return first;
+	int second  = max(nums[1], first);
+	int res = max(first, second);
+	for(int i = 2; i < nums.size(); i++){
+		res = max(nums[i] + first, second);	
+		first = second;
+		second = res;
+	}
+
+	return res;
+	
+}
 
 int main(){
 	vector<int> nums = {1, 2, 3, 1};
