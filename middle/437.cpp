@@ -11,7 +11,7 @@ struct TreeNode {
     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
 
-void process(TreeNode* root, unordered_map<int, int> mp, int &res, int &targetSum, int preSum);
+void process(TreeNode* root, unordered_map<int, int> &mp, int &res, int &targetSum, int preSum);
 int pathSum(TreeNode* root, int targetSum) {
 	int res = 0;
 	unordered_map<int, int>mp;
@@ -22,7 +22,7 @@ int pathSum(TreeNode* root, int targetSum) {
 	return res;
 }
 
-void process(TreeNode* root, unordered_map<int, int> mp, int &res, int &targetSum, int preSum){
+void process(TreeNode* root, unordered_map<int, int> &mp, int &res, int &targetSum, int preSum){
 	if(root == nullptr)
 		return;
 	int cur = root->val + preSum;
