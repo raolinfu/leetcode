@@ -1,4 +1,5 @@
 #include<string>
+#include<iostream>
 #include<unordered_map>
 #include<vector>
 #include<algorithm>
@@ -50,5 +51,10 @@ public:
 };
 
 int main(){
+	Trie tree;
+	tree.insert("abc");
+	tree.insert("rao");
+	cout<< tree.search("rao")<< endl;
+	
 	return 0;
 }
