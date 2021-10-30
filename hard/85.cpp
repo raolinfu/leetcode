@@ -22,12 +22,9 @@ int maximalRectangle(vector<vector<char>>& matrix) {
 	}
 	for(int i = 0; i < rows; i++){
 		stack<int> st;
+		st.push(-1);
 		for(int j = 0; j < cols; j++){
-			if(st.empty()){
-				st.push(j);
-				continue;
-			}
-			while(!st.empty() && st.top() > dp[i][j]){
+			while(!st.empty() && dp[i][st.top()] >= dp[i][j]){
 				int pre = st.top();
 				int comp = dp[i][pre] * (j - pre);
 				res = max(res, comp);
@@ -36,12 +33,13 @@ int maximalRectangle(vector<vector<char>>& matrix) {
 			st.push(j);
 		}
 		if(!st.empty()){
-			int j = st.top() + 1;
 			while(!st.empty()){
-				int pre = st.top();
-				int comp = dp[i][pre] * (j - pre);
-				res = max(res, comp);
+				int j = st.top();
 				st.pop();
+				if(!st.empty()){
+					int comp = dp[i][j] * (j - st.top());
+					res = max(res, comp);
+				}
 			}
 		}	
 	}
