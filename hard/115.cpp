@@ -51,35 +51,31 @@ void process(string &s, string &t, int &res, unordered_map<char, int> &set1,  un
 }
 /* 
  * 动态规划
- *
+ * s[i:] t[j:]的种数
  * */
 int numDistinct1(string s, string t) {
-	int res;
-	vector<vector<int>> dp;
-	for(int i = 0; i < s.size(); i++)
-		dp.push_back(vector<int>(t.size(), 0));
-	dp[0][0] = s[0] == t[0]? 1: 0;
-	for(int i = 0; i < s.length(); i++){
-		for(int j = 0; j < t.length(); j++){
-			if(i == 0)
-				continue;
-			if(j == 0){
-				if(s[i] == t[j])
-					dp[i][j] = dp[i - 1][j] + 1;
-				else 
-					dp[i][j] = dp[i - 1][j];	
-				continue;	
-			}
-
-			if(s[i] == t[j]){
-				dp[i][j] = dp[i - 1][j] + dp[i - 1][j - 1];
-			}else{
-				dp[i][j] = dp[i - 1][j];
+	int m = s.length(), n = t.length();
+	if (m < n) {
+		return 0;
+	}
+	vector<vector<long>> dp(m + 1, vector<long>(n + 1));
+	for (int i = 0; i <= m; i++) {
+		dp[i][n] = 1;
+	}
+	for (int i = m - 1; i >= 0; i--) {
+		char sChar = s.at(i);
+		for (int j = n - 1; j >= 0; j--) {
+			char tChar = t.at(j);
+			if (sChar == tChar) {
+				dp[i][j] = dp[i + 1][j + 1] + dp[i + 1][j];
+			} else {
+				dp[i][j] = dp[i + 1][j];
 			}
 		}
 	}
-	return dp[s.length() - 1][t.length() - 1];
+	return dp[0][0];
 }
+
 
 int main(){
 	/* string s = "rabbbit";
