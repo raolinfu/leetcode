@@ -1,4 +1,5 @@
 // 解题思路 判断各种不同条件即可
+// 方法二 动态规划 某点左侧和右侧比它小的个数
 #include<vector>
 #include<iostream>
 using namespace std;
