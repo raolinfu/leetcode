@@ -1,0 +1,3 @@
+SRC_ROOT = /home/rao/code/demo/icc_make
+OUT_PATH = $(SRC_ROOT)/out
+CUR_OUT_PATH = OUT_PATH/$(shell basename `pwd`)
