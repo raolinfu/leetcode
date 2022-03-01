@@ -13,6 +13,8 @@ class Solution{
 			}
 
 			res[0] = diff[0];
+			if(res[0] > capacity)
+				return false;
 			for(int i = 1; i < 10001; i++){
 				res[i] = res[i - 1] + diff[i];
 				if(res[i] > capacity) 
@@ -23,7 +25,7 @@ class Solution{
 
 		void increase(vector<int>& diff, int value, int i, int j, int n){
 			diff[i] += value;
-			if(j + 1 < n)
-				diff[j + 1] -= value;
+			if(j < n)
+				diff[j] -= value;
 		}
 }

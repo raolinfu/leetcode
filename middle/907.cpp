@@ -1,4 +1,5 @@
 #include<vector>
+#include<cmath>
 #include<stack>
 #include<iostream>
 using namespace std;
@@ -6,6 +7,7 @@ class Solution{
 	public:
 		int sumSubarrayMins(vector<int>& arr){
 			long ans = 0;
+			long mode = pow(10, 9) + 7;
 			vector<int> pre(arr.size());
 			vector<int> next(arr.size());
 			stack<int> stk;
@@ -21,13 +23,20 @@ class Solution{
 				while(!stk1.empty() && arr[i] < arr[stk1.top()])
 					stk1.pop();
 				next[i] = stk1.empty()? arr.size(): stk1.top();
-				stk.push(i);
+				stk1.push(i);
 			}
 
 			for(int i = 0; i < arr.size(); i++){
-				ans += (long)(i - pre[i]) * (long)(next[i] - i);
+				ans += arr[i] * (long)(i - pre[i]) * (long)(next[i] - i);
 			}
 
-			return ans;
+			return ans % mode;
 		}
 };
+int main(){
+	Solution s;
+	vector<int> arr = {3,1,2,4};
+	cout<< s.sumSubarrayMins(arr)<< endl;
+
+	return 0;
+}
