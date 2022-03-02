@@ -39,6 +39,7 @@ public:
             for (int i = 1; i < size; i++) {
                 string& email = account[i];
                 if (!emailToIndex.count(email)) {
+					// 一个email只对应一个index 后面会将前面覆盖
                     emailToIndex[email] = emailsCount++;
                     emailToName[email] = name;
                 }
