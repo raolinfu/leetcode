@@ -6,7 +6,7 @@
 using namespace std;
 class Solution{
 	public:
-		bool splitArr(vector<int>& nums, int k){
+		bool canPartitionKSubset(vector<int>& nums, int k){
 			int sum  = 0;
 			for(auto n: nums)
 				sum += n;
@@ -55,7 +55,7 @@ int main(){
 	Solution s;
 	vector<int> nums{1, 3, 4, 6, 2, 5, 3};
 	int k = 4;
-	cout<< s.splitArr(nums, k)<< endl;
+	cout<< s.canPartitionKSubset(nums, k)<< endl;
 
 	return 0;
 }

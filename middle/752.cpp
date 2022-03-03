@@ -10,6 +10,8 @@ class Solution{
 			int ans = 0;
 			queue<string> q;
 			unordered_set<string> set(deadends.begin(), deadends.end());
+			if(set.count("0000"))
+                return -1;
 			q.push("0000");
 			while(!q.empty()){
 				int len = q.size();
