@@ -33,14 +33,14 @@ public:
 	int getMaxSquire(vector<int>& nums){
 		int ans = 0;
 		int i = 0;
-		vector<int> stk{0};
-		while(stk.size() > 1 && i < nums.size()){
+		vector<int> stk{-1};
+		while(stk.size() > 0 && i < nums.size()){
 			while(stk.size() > 1 && nums[i] < nums[stk.back()]){
 				int idx = stk.back();
-				int len = i - stk.back();
+				stk.pop_back();
+				int len = i - stk.back() - 1;
 				if(len >= nums[idx])
 					ans = max(ans, nums[idx] * nums[idx]);
-				stk.pop_back();
 			}
 
 			stk.push_back(i);
@@ -48,10 +48,10 @@ public:
 		}
 		while(stk.size() > 1){
 			int idx = stk.back();
-			int len = i - stk.back();
+			stk.pop_back();
+			int len = i - stk.back() - 1;
 			if(len >= nums[idx])
 				ans = max(ans, nums[idx] * nums[idx]);
-			stk.pop_back();
 		}
 
 		return ans;
