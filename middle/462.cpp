@@ -1,19 +1,31 @@
 #include<vector>
+#include<climits>
+#include<algorithm>
 #include<iostream>
 using namespace std;
 
 int minMoves2(vector<int>& nums) {
-	int res = 0;
+	sort(nums.begin(), nums.end());
+	long res = LONG_MAX;
 	long sum = 0;
 	int len = nums.size();
 	vector<long> dp(len);
+	vector<long> right(len);
 	for(int i = 0; i < len; i++){
 		sum += nums[i];
 		dp[i] = sum;
 	}
+
+	sum = 0;
+	for(int i = len - 1; i >= 0; i--){
+		sum += nums[i];
+		right[i] = sum;
+	}
 	for(int i = 0; i < len; i++){
-		// res = min<int>(res, (i + 1) * nums[i] - dp[i] + sum -dp[i] - (len - i - 1) * nums[i]);
-		res = min<int>(res, (2 * i + 2 - len) * nums[i] - 2 * dp[i] + sum);
+		long d1 = (long)(nums[i]) * (i + 1) - dp[i];
+		long d2 = right[i] - (long)nums[i] * (len - i);
+		long d = d1 + d2;
+		res = min(res, d);
 	}
 
 	return res;
