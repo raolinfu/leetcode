@@ -30,7 +30,11 @@ public:
                         x = nx;
                         y = ny;
                         ans = max(ans, x*x + y*y);
-                    }
+					// 遇到阻碍点就停止，看下一条指令
+                    } else {
+						break;
+					}
+					
                 }
             }
         }
