@@ -30,7 +30,6 @@ public:
 				l++;
 			}
 			r++;
-
 		}
 
 		return res + s;
