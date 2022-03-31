@@ -1,56 +1,44 @@
-#include<vector>
-#include<stack>
-#include<iostream>
+#include <vector>
+#include <stack>
 using namespace std;
+class Solution {
+public:
+    int maximalRectangle(vector<vector<char>>& matrix) {
+        int ans = 0;
+        int rows = matrix.size();
+        int cols = matrix[0].size();
+        vector<vector<int>> dp(rows, vector<int>(cols, 0));
+        stack<int> stk;
 
-int maximalRectangle(vector<vector<char>>& matrix) {
-	if(matrix.size() == 0 || matrix[0].size() == 0)
-		return 0;
-	int res = 0;
-	int rows = matrix.size();
-	int cols = matrix[0].size();
-	vector<vector<int>> dp;
-	for(int r = 0; r < rows; r++){
-		dp.push_back(vector<int>(cols));
-	}
-	for(int c = 0; c < cols; c++)
-		dp[0][c] = matrix[0][c] == '1'? 1: 0;
-	for(int c = 0; c < cols; c++){
-		for(int r = 1; r < rows; r++){
-			dp[r][c] = matrix[r][c] == '1'? dp[r - 1][c] + 1: 0;
-		}
-	}
-	for(int i = 0; i < rows; i++){
-		stack<int> st;
-		st.push(-1);
-		for(int j = 0; j < cols; j++){
-			while(!st.empty() && dp[i][st.top()] >= dp[i][j]){
-				int pre = st.top();
-				int comp = dp[i][pre] * (j - pre);
-				res = max(res, comp);
-				st.pop();
-			}	
-			st.push(j);
-		}
-		if(!st.empty()){
-			while(!st.empty()){
-				int j = st.top();
-				st.pop();
-				if(!st.empty()){
-					int comp = dp[i][j] * (j - st.top());
-					res = max(res, comp);
-				}
-			}
-		}	
-	}
+        for (int j = 0; j < cols; j++)
+            dp[0][j] = matrix[0][j] == '1';
+        for (int i = 1; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (matrix[i][j] == '1')
+                    dp[i][j] = dp[i - 1][j] + 1;
+            }
+        }
+        stk.push(-1);
+        for (int i = 0; i < rows; i++) {
+            int j = 0;
+            while (j < cols) {
+                while (stk.size() > 1 && dp[i][stk.top()] > dp[i][j]) {
+                    int top = stk.top(); 
+                    stk.pop();
+                    int len = j - stk.top() - 1;
+                    ans = max(ans, len * dp[i][top]);
+                }
 
-	return res;
-}
+                j++;
+            }
+            while (stk.size() > 1) {
+                int top = stk.top(); 
+                stk.pop();
+                int len = cols - stk.top() - 1;
+                ans = max(ans, len * dp[i][top]);
+            }
+        }
 
-int main(){
-	vector<vector<char>> matrix = {{'1','0','1','0','0'},{'1','0','1','1','1'},{'1','1','1','1','1'},{'1','0','0','1','0'}};
-	int res = maximalRectangle(matrix);
-	cout<< res<< endl;
-
-	return 0;
-}
+        return ans;
+    }
+};
