@@ -1,83 +1,82 @@
-#include<string>
-#include<unordered_set>
-#include<iostream>
-#include<unordered_map>
-#include<vector>
+#include <vector>
+#include <unordered_set>
+#include <string>
 using namespace std;
-struct Tree{
-	string word;
-	bool isEnd;
-	unordered_map<char, Tree*> mp;
-	Tree(): isEnd(false){};
-	void insert(string s){
-		Tree* cur = this;
-		for(char ch: s){
-			if(!cur->mp.count(ch)){
-				cur->mp[ch] = new Tree();
-			}
-			cur = cur->mp[ch];
-		}
-		cur->isEnd = true;
-		cur->word = s;
-	}
+class Tire {
+    public:
+        bool isEnd = false;
+        Tire* childreen[26] = {nullptr};
 
-	Tree* search(char ch){
-		// if(mp.find(ch) != mp.end()){
-		if(mp.count(ch)){
-			return mp[ch]; 
-		}
-		return nullptr;
-	}
+        void insert(string& str) {
+            Tire* cur = this;
+            for (char ch: str) {
+                if (cur->childreen[ch - 'a']) {
+                    cur = cur->childreen[ch - 'a'];
+                } else {
+                    Tire* n = new Tire();
+                    cur->childreen[ch - 'a'] = n;
+                    cur = n;
+                }
+            }
+            cur->isEnd = true;
+        };
 };
 
-void process(vector<vector<char>>& board, vector<vector<bool>>& visit, unordered_set<string>& res, Tree* node, int i, int j, int rows, int cols);
-vector<string> findWords(vector<vector<char>>& board, vector<string>& words) {
-	unordered_set<string> res;
-	vector<vector<bool>> visit(board.size(), vector<bool>(board[1].size(), true));
-	Tree tree;
-	int rows = words.size();
-	int cols = words[0].size();
-	for(string w: words){
-		tree.insert(w);
-	}
-	for(int i = 0; i < words.size(); i++){
-		for(int j = 0; j < words[0].size(); j++){
-			process(board, visit, res, &tree, i, j, rows, cols);
-		}
-	}
+class Solution {
+private:
+    int rows;
+    int cols;
+    unordered_set<string> st;
+    Tire* root;
+public:
+    vector<string> findWords(vector<vector<char>>& board, vector<string>& words) {
+        rows = board.size();
+        cols = board[0].size();
+        vector<vector<bool>> visited(rows, vector<bool>(cols, false));
 
-	return res.size()? vector<string>(res.begin(), res.end()): vector<string>();
-}
+        root = new Tire();
+        for (auto& w: words)
+            root->insert(w);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                string tmp;
+                backtrace(board, tmp, root, i , j, visited);
+            }
+        }
 
-void process(vector<vector<char>>& board, vector<vector<bool>>& visit, unordered_set<string>& res, Tree* node, int i, int j, int rows, int cols){
-	if(i >=0 && i < rows && j >=0 && j < cols && visit[i][j] ){
-		Tree* cur = node->search(board[i][j]);
-		if(cur){
-			if(cur->isEnd && !res.count(cur->word)){
-				res.insert(cur->word);
-			}
-			visit[i][j] = false;
-			process(board, visit, res, cur, i + 1, j, rows, cols);
-			process(board, visit, res, cur, i - 1, j, rows, cols);
-			process(board, visit, res, cur, i, j + 1, rows, cols);
-			process(board, visit, res, cur, i, j - 1, rows, cols);
-			visit[i][j] = true;;
-		}		
-	}
+        return vector<string>(st.begin(), st.end());
+    }
+
+    void backtrace(vector<vector<char>>& board, string& tmp, Tire* cur, int i, int j, vector<vector<bool>>& visited) {
+        if (i < 0 || i >= rows || j < 0 || j >= cols || visited[i][j])
+            return;
+        char& ch = board[i][j];
+        Tire* child = cur->childreen[ch - 'a'];
+        if (child == nullptr)
+            return;
+        visited[i][j] = true;
+        tmp += ch;
+        if (child->isEnd)
+            st.insert(tmp);
+        backtrace(board, tmp, child, i + 1, j, visited);
+        backtrace(board, tmp, child, i - 1, j, visited);
+        backtrace(board, tmp, child, i, j + 1, visited);
+        backtrace(board, tmp, child, i, j - 1, visited);
+
+        tmp.pop_back();
+        visited[i][j] = false;
+    }
+};
 
 
-}
 
-int main(){
-	/* vector<vector<char>> board =   {{'o','a','a','n'},
-	 *                                 {'e','t','a','e'},
-	 *                                 {'i','h','k','r'},
-	 *                                 {'i','f','l','v'}};
-	 * vector<string>words = {"oath","pea","eat","rain"}; */
-	vector<vector<char>> board = {{'a','b'},{'c','d'}};
-	vector<string> words = {"abcb"};
-	vector<string> res = findWords(board, words);
-	for(auto str: res)
-		cout<< str<< endl;
-	return 0;
-}
+
+
+
+
+
+
+
+
+
+
