@@ -4,9 +4,9 @@ using namespace std;
 
 class Union {
     private:
-        size_t size_;
         size_t cnt;
         vector<int> parents;
+        vector<int> count;
         int find(int a);
     public:
         Union(size_t size);
@@ -16,16 +16,20 @@ class Union {
 };
 
 Union::Union(size_t size) {
-    size_ = size;
     cnt = size;
     parents = vector<int>(size);
-    for (int i = 0; i < size_; i++)
+    count = vector<int>(size);
+    for (int i = 0; i < size; i++) {
         parents[i] = i;
+        count[i] = 1;
+	}
 }
 
 int Union::find(int a) {
-    while (a != parents[a])
+    while (a != parents[a]) {
+		parents[a] = parents[parents[a]];
         a = parents[a];
+	}
     return a;
 }
 
@@ -35,7 +39,13 @@ void Union::unify(int a, int b) {
     if (p1 == p2)
         return;
     --cnt;
-    parents[p1] = p2;
+	if (count[p1] > count[p2]) {
+		parents[p2] = p1;
+		count[p1] += count[p2];
+	} else {
+		parents[p1] = p2;
+		count[p2] += count[p1];
+	} 
 }
 
 bool Union::connected(int a, int b) {
