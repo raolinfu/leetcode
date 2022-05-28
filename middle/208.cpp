@@ -1,60 +1,61 @@
-#include<string>
-#include<iostream>
-#include<unordered_map>
-#include<vector>
-#include<algorithm>
-#include<map>
-
+#include <string>
 using namespace std;
 
 class Trie {
-private:
-	string word;
-	unordered_map<char, Trie*> children;
-	Trie* searchPrefix(string prefix){
-		Trie *node = this;
-		for(auto ch: prefix){
-			if(node->children.count(ch))
-				node = node->children[ch];
-			else
-				return nullptr;
-		}
-
-		return node;
-	}
 public:
+    bool isEnd;
+    Trie* children[26];
+
     Trie() {
-		this->word = "";
+        isEnd = false;
+        for (int i = 0; i < 26; i++)
+            children[i] = nullptr;
     }
     
     void insert(string word) {
-		Trie *node = this;
-		for(auto ch: word){
-			if(node->children[ch] == nullptr){
-				node->children[ch] = new Trie();	
-			}
-			node = node->children[ch];
-		}
-		node->word = word;
-	}
+        Trie* cur = this;
+        for (int i = 0; i < word.size(); i++) {
+            char ch = word[i];
+            int idx = ch - 'a';
+            if (cur->children[idx]) {
+                cur = cur->children[idx];
+            } else {
+                Trie* n = new Trie();
+                cur->children[idx] = n;
+                cur = n;
+            }
+        }
+
+        cur->isEnd = true;
+    }
     
     bool search(string word) {
-		Trie* node = searchPrefix(word);
-		return node != nullptr && node->word == word;
+        Trie* cur = this;
+        for (int i = 0; i < word.size(); i++) {
+            char ch = word[i];
+            int idx = ch - 'a';
+            if (cur->children[idx]) {
+                cur = cur->children[idx];
+            } else {
+                return false;
+            }
+        }
+
+        return cur->isEnd;
     }
     
     bool startsWith(string prefix) {
-		Trie *node = searchPrefix(prefix);
-		return node == nullptr? false: true;
+        Trie* cur = this;
+        for (int i = 0; i < prefix.size(); i++) {
+            char ch = prefix[i];
+            int idx = ch - 'a';
+            if (cur->children[idx]) {
+                cur = cur->children[idx];
+            } else {
+                return false;
+            }
+        }
+
+        return true;
     }
-
 };
-
-int main(){
-	Trie tree;
-	tree.insert("abc");
-	tree.insert("rao");
-	cout<< tree.search("rao")<< endl;
-	
-	return 0;
-}
