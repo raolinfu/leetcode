@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name = Android Studio
+Comment= android studio
+Exec=/home/rao/android-studio/bin/studio.sh
+Icon=/home/rao/android-studio/bin/studio.png
+Terminal=false
+Type=Application
